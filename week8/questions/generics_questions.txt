@@ -1,0 +1,27 @@
+Questions:
+<1> Parameterized types are NOT macro expanded. i.e., no real instantiation? What does this mean?
+<2> 8.9 - Objects* are assumed at compile time? Are we talking about generics?
+
+Notes:
+- Generics are used for data checking (Arrays can handle multiple type, sometimes when it shouldn't). 
+  One of the reasons generics were created was to make runtime errors noticable at compile time. 
+- Type safety was primary concern. Readability is usually improved [Doug Lea]
+- No matter to what the type parameters are bound, the code for the generic class is the same. 
+- To implement generics, the java compiler replaces all type parameters in generic types with their bounds or Object if the type parameters are unbounded. 
+  The produced bytecode, therefore, contains only ordinary classes, interfaces, and methods.
+- Type erasure ensures that no new classes are created for parameterized types; consequently, generics incur no runtime overhead.
+- A type variable with multiple bounds is a subtype of all the types listed in the bound. If one of the bounds is a class, it must be specified first.
+-  Now consider the following method:
+
+     public void boxTest(Box<Number> n) { /* ... */ }
+
+  What type of argument does it accept? By looking at its signature, you can see that it accepts a single argument whose type is Box<Number>. 
+  But what does that mean? Are you allowed to pass in Box<Integer> or Box<Double>, as you might expect? The answer is "no", because Box<Integer> and Box<Double> are not subtypes of Box<Number>.
+
+
+- #WildCards - In generic code, the question mark (?), called the wildcard, represents an unknown type. 
+  The wildcard can be used in a variety of situations: as the type of a parameter, field, or local variable; sometimes as a return type 
+  The wildcard is never used as a type argument for a generic method invocation, a generic class instance creation, or a supertype.
+- #WildCards - The term List<Number> is more restrictive than List<? extends Number> because the former matches a list of type Number only, whereas the latter matches a list of type Number or any of its subclasses.
+
+Thoughts

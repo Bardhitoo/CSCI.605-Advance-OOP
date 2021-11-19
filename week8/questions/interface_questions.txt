@@ -1,0 +1,44 @@
+<1>  If a class (interface) implements (extends) two or more interfaces, whose method is implemented?
+---> First of all, if the developer doesn't define the method that both interfaces have, java is going to complain
+---> with this error: 
+     /*
+     AAandBBuse.java:1: error: class AAandBBuse inherits unrelated defaults for b() from types AA and BB
+     public class AAandBBuse implements AA, BB {
+     */
+---> The user has to define the method that it's implementing from both interfaces (then java stops complaining).
+     Then on that method, the engineer decides whose implementation to choose (AA or BB), it does this through:
+     <interface>.super.<methodcall()>
+
+<2> What does this mean, and how to avoid it "Cannot make a static reference from a non-static context."
+
+
+
+
+Notes:
+- On PSVM variables are not initialized by default, as class variables are. 
+- Interfaces can only have public, default and static variables/ methods - not private or protected
+- It appears that all the concrete methods defined on the interface are static/ default.
+- Aggregation is what we used for the Queen Chesspiece (Rook and Bishop). By definition: Aggregation is a design term, 
+  which means that you create an new object by composing it out of the others
+- Only class constructor (starts with the same name as class) can call super(), and on the first line, it defines which
+  constructor of the super class it calls (signature). If there's no explicit call, java calls the default constructor of
+  of the super class.
+- super (it is different from `super()`) can be called on any method, and it can reference directly to the super class method. 
+- this is a reference to the current object — the object whose method or constructor is being called. From within a constructor, 
+  you can also use the this() keyword to call another constructor in the same class -> this() does a specific
+  constructor invocation. On top of it, this = this() calling another constructor won't work, java: cannot assign to 'this'
+- #Inheritance When inheriting from a superclass, instance variables from the inherited class are treated as generated from the 
+  class inheriting from.
+- #NestedClasses: https://docs.oracle.com/javase/tutorial/java/javaOO/nested.html
+	- #InnerInstanceClass: As with instance methods and variables, an inner class is associated with an instance of its enclosing class and 
+	  has direct access to that object's methods and fields. Also, because an inner class is associated with an instance, 
+          it cannot define any static members itself.
+	- #StaticClass - In effect, a static nested class is behaviorally a top-level class that has been nested in another top-level class for packaging convenience.
+- #StaticInitializerBlock - The code in a static initializer block is executed when the class is initialized (Before an object of that is created). 
+  Blocks are called chronologically
+- #Generics - Generics enable types (classes and interfaces) to be parameters when defining classes, interfaces and methods.
+  Much like the more familiar formal parameters used in method declarations, type parameters provide a way for you to re-use the same code with different inputs.
+  
+
+Thought:
+- Java doesn't tend to be good at runtime activities. (downcasting (happens at runtime), method overriding, runtime errors)
