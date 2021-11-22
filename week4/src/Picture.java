@@ -1,4 +1,4 @@
-*
+/*
  * Picture.java
  *
  * Version:
