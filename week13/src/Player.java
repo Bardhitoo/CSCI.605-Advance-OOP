@@ -106,7 +106,7 @@ public class Player {
      */
     static class Picture {
         String filePath;
-        Vector<String> vecPicture;
+        Vector<String> vecPicture = new Vector<>();
 
         /**
          * Class Picture constructor

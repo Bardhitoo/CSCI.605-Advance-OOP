@@ -107,10 +107,13 @@ public class Picture {
                 players[0] = new Player();
                 pictures[0] = new Player.Picture(args[index + 1]);     // TODO: Is this the right way to initialize the inner class in Player
                 guessWords[0] = new Player.GuessWord(args[index + 2]); // TODO: Is this the right way to initialize the inner class in Player
+                guessWords[0].opponentsGuesses = "_".repeat(guessWords[0].playersWord.length());
             } else if (args[index].endsWith("-you")) {
                 players[1] = new Player();
                 pictures[1] = new Player.Picture(args[index + 1]);      // TODO: Is this the right way to initialize the inner class in Player
                 guessWords[1] = new Player.GuessWord(args[index + 2]);  // TODO: Is this the right way to initialize the inner class in Player
+                guessWords[1].opponentsGuesses = "_".repeat(guessWords[1].playersWord.length());
+
             }
         }
 

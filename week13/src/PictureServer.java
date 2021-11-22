@@ -16,7 +16,7 @@ public class PictureServer {
     Socket socket = null;
 
     public void sendData(String filePath) {
-        Path path = Paths.get("src\\" + filePath);
+        Path path = Paths.get(filePath);
         try {
             System.out.println(path.toAbsolutePath());
             Scanner sc = new Scanner(path.toAbsolutePath());
