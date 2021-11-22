@@ -14,7 +14,7 @@ class Consumer extends Thread {
     }
 
     public void run() {
-        while (true) {
+        while (thisStorage.getTransactions() < thisStorage.getTransactionMax()) {
             Vector aVector = thisStorage.consume(id);
         }
     }

@@ -7,7 +7,6 @@ class Match{
     final String headColor = "red";
 }
 
-
 class Box{
     final String name = "Box";
     final String brandName = "Diamond";
@@ -51,7 +50,7 @@ class BoxProducer extends Thread {
     }
 
     public void run() {
-        while (true) {
+        while (thisStorage.getTransactions() < thisStorage.getTransactionMax()) {
             Vector aVector = new Vector();
             for (int counter = 0; counter < SO_MANY; counter++) {
                 aVector.add(id + "_" + new Box());

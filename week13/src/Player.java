@@ -16,7 +16,7 @@
  * @author      Bardh Rushiti
  */
 
-
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -25,17 +25,17 @@ import java.util.Scanner;
 import java.util.Vector;
 
 /**
- * Helper class for implementing Game.java
+ * Helper class for implementing Picture.java
  */
 public class Player {
-    String playerName;
-    static int playerId;
+    protected String playerName = "0";
+    protected static int playerId = 0;
 
     /**
      * Class Player constructor
      */
-    public Player(String playerName) {
-        this.playerName = playerName;
+    public Player() {
+        this.playerName = Integer.parseInt(this.playerName) + 1 + "";
     }
 
     /**
@@ -102,24 +102,17 @@ public class Player {
     }
 
     /**
-     * Helper class for implementing Game.java
+     * Helper class for implementing Picture.java
      */
     static class Picture {
-        Scanner sc;
+        String filePath;
         Vector<String> vecPicture;
 
         /**
          * Class Picture constructor
          */
         public Picture(String filePath) {
-            Path path = Paths.get("src\\" + filePath);
-            try {
-                sc = new Scanner(path.toAbsolutePath());
-            } catch (IOException e) {
-                System.err.println(path + "doesn't exist. Make sure to input the correct filepath");
-                e.printStackTrace();
-            }
-            this.vecPicture = readScannerFile(sc);
+            this.filePath = filePath;
         }
 
         /**
@@ -128,14 +121,13 @@ public class Player {
          * @param sc scanner file containing picture as text
          * @return vecScannerFile  Vector containing the scanner file
          */
-        public Vector<String> readScannerFile(Scanner sc) {
+        public Vector<String> readScannerFile(Scanner sc) { // Client when recieving data
             String asd = sc.nextLine();
             Vector<String> vecScannerFile = new Vector<String>(asd.length());
             // while the scanner has a next line it will add the line to the string which
             // will then be added to the vector.
             while (sc.hasNextLine()) {
-                asd = sc.nextLine();
-                vecScannerFile.add(asd);
+                vecScannerFile.add(sc.nextLine());
             }
             // returns the final vector containing the input text file
             return vecScannerFile;
@@ -178,8 +170,3 @@ public class Player {
     }
 
 }
-
-/**
- * Helper class for implementing Game.java
- */
-

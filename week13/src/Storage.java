@@ -3,11 +3,14 @@ import java.util.ArrayList;
 
 class Storage {
 
-    final int nMatches = 90;
-    final int nBoxes = 9;
+    private final int nMatches = 90;
+    private final int nBoxes = 9;
 
-    int soManyMatches = 0;          // counter, used for verification
-    int soManyBoxes = 0;            // counter, used for verification
+    private int transactions = 0;
+    private int transactionMax = 3;
+
+    private int soManyMatches = 0;          // counter, used for verification
+    private int soManyBoxes = 0;            // counter, used for verification
 
     private ArrayList theStorageForMatches = new ArrayList(nMatches);
     private ArrayList theStorageForBoxes = new ArrayList(nBoxes);
@@ -66,7 +69,8 @@ class Storage {
     synchronized Vector consume(int id) {
         Vector aVector = new Vector(id);
 
-        if ((soManyMatches  >= 50) && (soManyBoxes  >= 0)) {
+        if ((soManyMatches  >= 50) && (soManyBoxes  >= 1)) {
+            transactions += 1;
             System.err.println("----> consume" + id);
 
             aVector.add(theStorageForBoxes.remove(0));
@@ -82,5 +86,13 @@ class Storage {
             return aVector;
         } else
             return null;
+    }
+
+    public int getTransactionMax() {
+        return transactionMax;
+    }
+
+    public int getTransactions() {
+        return transactions;
     }
 }
