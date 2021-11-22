@@ -67,7 +67,7 @@ class Storage {
         Vector aVector = new Vector(id);
 
         if ((soManyMatches  >= 50) && (soManyBoxes  >= 0)) {
-            System.err.println("----> consume");
+            System.err.println("----> consume" + id);
 
             aVector.add(theStorageForBoxes.remove(0));
 

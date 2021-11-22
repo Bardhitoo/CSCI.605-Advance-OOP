@@ -3,8 +3,8 @@ public class Test {
 
     public static void main(String args[]) {
         Storage theStorage = new Storage();
-        int soManyP = 10;
-        int soManyC = 10;
+        int soManyP = 5;
+        int soManyC = 5;
 
         System.out.println("# producer = " + soManyP);
         System.out.println("# consumer = " + soManyC);

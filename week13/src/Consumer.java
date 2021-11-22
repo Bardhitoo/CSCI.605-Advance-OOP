@@ -6,9 +6,9 @@ class Consumer extends Thread {
     final int SO_MANY;
 
     Consumer(int id, Storage thisStorage) {
-        this.id = id;
+        this.id = 1;
         this.thisStorage = thisStorage;
-        SO_MANY = id;
+        SO_MANY = 1;
         setName("Consumer: " + id);
         System.out.println("C: " + id);
     }

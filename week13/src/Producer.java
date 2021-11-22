@@ -19,9 +19,9 @@ class MatchProducer extends Thread {
     Storage thisStorage;
 
     MatchProducer(int id, Storage thisStorage) {
-        this.id = id;
+        this.id = 1;
         this.thisStorage = thisStorage;
-        SO_MANY = id * 50;
+        SO_MANY = 50;
         setName("Match Producer: " + id);
         System.out.println("MP: " + id);
     }
@@ -43,9 +43,9 @@ class BoxProducer extends Thread {
     Storage thisStorage;
 
     BoxProducer(int id, Storage thisStorage) {
-        this.id = id;
+        this.id = 1;
         this.thisStorage = thisStorage;
-        SO_MANY = id;
+        SO_MANY = 1;
         setName("Box Producer: " + id);
         System.out.println("BP: " + id);
     }
