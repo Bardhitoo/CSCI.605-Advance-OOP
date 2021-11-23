@@ -6,13 +6,12 @@
  * @author Bardh Rushiti
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
-public class Picture {
+public class PictureDG {
     private final int numPlayer = 2;
     private final Player[] players = new Player[numPlayer];
     private final Player.Picture[] pictures = new Player.Picture[numPlayer];
@@ -23,29 +22,35 @@ public class Picture {
     /**
      * Picture (Game) Constructor
      */
-    protected Picture() {
+    protected PictureDG() {
     }
 
     /**
      * Sends filePath to server and `invites` server to send the fileContents (line by line).
      */
     public void receivePicVector() {
-        try (
-                Socket clientSocket = new Socket(host, port);
-                PrintWriter outStream = new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader inpStream = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))
-        ) {
+        try {
+            DatagramSocket ds = new DatagramSocket();
+            InetAddress ip = InetAddress.getLocalHost();
+            byte[] data;
             for (int pictureId = 0; pictureId < players.length; pictureId++) {
-                outStream.println(pictures[pictureId].filePath);
-                String line;
-                while (true){
-                    line = inpStream.readLine();
+                data = pictures[pictureId].filePath.getBytes();
+                DatagramPacket dpSend = new DatagramPacket(data, data.length, ip, port);
+                ds.send(dpSend);
+                while (true) {
+                    byte[] receive = new byte[65535];              // Clear the buffer after every message.
+                    DatagramPacket dpReceive = new DatagramPacket(receive, receive.length);
+                    ds.receive(dpReceive);
+                    String line = new String(dpReceive.getData(), dpReceive.getOffset(), dpReceive.getLength());
+                    pictures[pictureId].vecPicture.add(line);
                     if (line.contains("<EOF>")) // End Of File
                         break;
-                    pictures[pictureId].vecPicture.add(line);
                 }
             }
-            outStream.println("<EOT>"); // End Of Transfer
+            data = "<EOT>".getBytes(); // End Of Transfer
+            DatagramPacket dpSend = new DatagramPacket(data, data.length, ip, port);
+            ds.send(dpSend);
+            ds.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,7 +93,7 @@ public class Picture {
      * Checks the arguments from the user to make sure they are in the form
      * that the program can further process them adequately
      */
-    private void parseArgs(String []args){
+    private void parseArgs(String[] args) {
         if (args.length != 10) {
             System.err.println("The Picture.java needs to have five (5) arguments!");
             System.err.println("java Picture -me <mePicture> <meWord> " +
@@ -120,7 +125,7 @@ public class Picture {
      * Main function
      */
     public static void main(String[] args) {
-        Picture newGame = new Picture();
+        PictureDG newGame = new PictureDG();
         newGame.parseArgs(args);
         newGame.receivePicVector();
         newGame.run();

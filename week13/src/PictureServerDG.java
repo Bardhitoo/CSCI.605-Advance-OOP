@@ -1,26 +1,20 @@
 /*
- * This program downloads the images from another computer via tcp/ip sockets
+ * This program downloads the images from another computer via datagram sockets
  *
  * @author      Anirudh Narayanan
  * @author      Bardh Rushiti
  */
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.nio.file.Path;
+import java.net.*;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
-public class PictureServer {
-    int port;
-    ServerSocket serverSocket = null;
-    PrintWriter outStream = null;
-    BufferedReader inpStream = null;
-    Socket socket = null;
+
+public class PictureServerDG {
+    private int port;
+    private static InetAddress ip;
+    private static DatagramSocket ds = null;
 
     /**
      *  Sends data of the filePath to the user
@@ -28,17 +22,25 @@ public class PictureServer {
      * @param filePath string representing the filepath where the data is stored in the server
      */
     public void sendData(String filePath) {
-        Path path = Paths.get(filePath);
+        Scanner sc = null;
         try {
-            System.out.println(path.toAbsolutePath());
-            Scanner sc = new Scanner(path.toAbsolutePath());
+            byte[] data;
+            System.out.println(Paths.get(filePath).toAbsolutePath());
+            sc = new Scanner(Paths.get(filePath).toAbsolutePath());
             while (sc.hasNextLine()) {
-                outStream.println(sc.nextLine());
+                data = sc.nextLine().getBytes();
+                DatagramPacket dpSend = new DatagramPacket(data, data.length, ip, port);
+                ds.send(dpSend);
             }
-            outStream.println("<EOF>");
+            data = "<EOF>".getBytes();
+            DatagramPacket dpSend = new DatagramPacket(data, data.length, ip, port);
+            ds.send(dpSend);
+            sc.close();
         } catch (IOException e) {
-            System.err.println(path + "doesn't exist. Make sure to input the correct filepath");
             e.printStackTrace();
+        } finally {
+            if (sc != null)
+                sc.close();
         }
     }
 
@@ -46,32 +48,25 @@ public class PictureServer {
      *  Received the filePath from client and sends the respective filecontent (line-by-line)
      *
      */
-    public void receiveFilePath() throws IOException {
+    public void receivePathSendFile() throws IOException {
+        ds = new DatagramSocket(port);
         try {
-            serverSocket = new ServerSocket(port);
-            System.out.println("Listening on port " + serverSocket.getLocalPort());
-            socket = serverSocket.accept();
-            outStream = new PrintWriter(socket.getOutputStream(), true);
-            inpStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
             while (true) {
-                String filePath = inpStream.readLine();
+                byte[] receive = new byte[65535];              // Clear the buffer after every message.
+                DatagramPacket dpReceive = new DatagramPacket(receive, receive.length);
+                System.out.println("Listening on port " + ds.getLocalPort());
+                ds.receive(dpReceive);
+                ip = dpReceive.getAddress();
+                port = dpReceive.getPort();
+                String filePath = new String(dpReceive.getData(), dpReceive.getOffset(), dpReceive.getLength());
                 if (filePath.equals("<EOT>"))
                     break;
                 System.out.println("Filepath " + filePath);
                 sendData(filePath);
             }
+            ds.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            if (outStream != null)
-                outStream.close();
-            if (inpStream != null)
-                inpStream.close();
-            if (socket != null)
-                socket.close();
-            if (serverSocket != null)
-                serverSocket.close();
         }
     }
 
@@ -86,9 +81,9 @@ public class PictureServer {
             System.exit(-1);
         }
 
-        try{
+        try {
             port = Integer.parseInt(args[1]);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.err.println("Make sure to input integer port in <port>");
             System.exit(-1);
         }
@@ -99,10 +94,10 @@ public class PictureServer {
      *  Main function
      */
     public static void main(String[] args) {
-        PictureServer server = new PictureServer();
+        PictureServerDG server = new PictureServerDG();
         server.parseArgs(args);
         try {
-            server.receiveFilePath();
+            server.receivePathSendFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

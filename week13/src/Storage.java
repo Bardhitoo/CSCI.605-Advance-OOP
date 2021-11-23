@@ -1,3 +1,10 @@
+/*
+ * This program simulates the producer/ consumer dynamic using a java program
+ *
+ * @author      Anirudh Narayanan
+ * @author      Bardh Rushiti
+ */
+
 import java.util.Vector;
 import java.util.ArrayList;
 
@@ -7,7 +14,7 @@ class Storage {
     private final int nBoxes = 9;
 
     private int transactions = 0;
-    private int transactionMax = 3;
+    private final int transactionMax = 3;
 
     private int soManyMatches = 0;          // counter, used for verification
     private int soManyBoxes = 0;            // counter, used for verification
@@ -16,6 +23,13 @@ class Storage {
     private ArrayList theStorageForBoxes = new ArrayList(nBoxes);
     private Object sync = new Object();
 
+
+    /**
+     * This test is a sanity check for all transactions of producer/ client
+     *
+     * @author      Anirudh Narayanan
+     * @author      Bardh Rushiti
+     */
     void test() {
         System.out.println("Matches: " + soManyMatches + " - Boxes: " + soManyBoxes);
         if (soManyMatches > nMatches) {
@@ -42,6 +56,11 @@ class Storage {
         }
     }
 
+    /**
+     * Adds matches to the storage
+     *
+     * @param addTheseItems adds the items in the vector
+     */
     synchronized void addMatches(Vector addTheseItems) {
         if (soManyMatches + addTheseItems.size() < nMatches) {
             System.err.println("---> produce matches");
@@ -54,6 +73,11 @@ class Storage {
         }
     }
 
+    /**
+     * Adds boxes to the storage
+     *
+     * @param addTheseItems adds the items in the vector
+     */
     synchronized void addBoxes(Vector addTheseItems) {
         if (soManyBoxes + addTheseItems.size() < nBoxes) {
             System.err.println("---> produce boxes");
@@ -66,12 +90,19 @@ class Storage {
         }
     }
 
-    synchronized Vector consume(int id) {
-        Vector aVector = new Vector(id);
+    /**
+     * Consumes one product, 1 (one) match box and fifty (50) matches, per client
+     *
+     * */
+    synchronized Vector consume() {
+        if (transactions >= transactionMax)
+            return null;
+
+        Vector aVector = new Vector(0);
 
         if ((soManyMatches  >= 50) && (soManyBoxes  >= 1)) {
             transactions += 1;
-            System.err.println("----> consume" + id);
+            System.err.println("----> consume");
 
             aVector.add(theStorageForBoxes.remove(0));
 
@@ -79,8 +110,8 @@ class Storage {
                 aVector.add(theStorageForMatches.remove(0));
             }
 
-            soManyMatches -= (50 * id) ;
-            soManyBoxes -= id;
+            soManyMatches -= 50 ;
+            soManyBoxes -= 1;
             test();
             System.err.println("<--- consume");
             return aVector;
