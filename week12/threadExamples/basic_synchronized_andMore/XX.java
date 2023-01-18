@@ -14,14 +14,12 @@ public class XX extends Thread	{
 
 	public XX (String info) {
 		this.info    = info;
-		synchronized ( o ) {
-			if ( info.equals("0") )
-				( new XX("1") ).start();
-		}
 	}
 	public void run () {
 		while ( true )	{
 			synchronized ( o ) {
+				if ( info.equals("0") )
+					( new XX("1") ).start();
 				System.out.println(info);
 				try {
 					o.notify();

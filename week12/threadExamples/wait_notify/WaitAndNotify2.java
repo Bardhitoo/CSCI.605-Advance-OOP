@@ -1,17 +1,14 @@
 import java.util.Vector;
 
 class WaitAndNotify_First extends Thread	{
-
 	private static int counter = 0;
 	private String  name = null;
 	private Vector aVector;
-
 	public WaitAndNotify_First (String name, Vector aVector) {
 		this.aVector = aVector;
 		this.name = name;
-		new WaitAndNotify_First("two", aVector).start(); // Stackoverflow
+//		new WaitAndNotify_First("two", aVector).start(); // Stackoverflow
 	}
-	
 	public void run () {
 	   synchronized ( aVector )	{
 		if (   name.equals("two")  )	{
@@ -32,8 +29,6 @@ class WaitAndNotify_First extends Thread	{
 		}
 	  }
 	}
-
-
 	public static void main (String args []) {
 		Vector theVector = new Vector();
 		new WaitAndNotify_First("one", theVector).start();

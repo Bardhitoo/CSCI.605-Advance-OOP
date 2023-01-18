@@ -7,11 +7,12 @@
  */
 public class T_4 extends Thread    {
    
-    static Object o = new Object();
+    static Object o;
     String info;
 
-    public T_4(String info )    {
+    public T_4(String info, Object o)    {
         this.info = info;
+        this.o = o;
     }     
 
     public void run () {
@@ -28,7 +29,7 @@ public class T_4 extends Thread    {
     }
 
     public static void main (String args []) {
-        new T_4("1").start();
-        new T_4("2").start();
+        new T_4("1",new Object()).start();
+        new T_4("2", new Object()).start();
     }
 }

@@ -44,8 +44,16 @@ class Thread_1 extends Thread {
     public static void main(String args[]) {
         Thread_1 aT1 = new Thread_1(1);
         Thread_1 aT2 = new Thread_1(2);
-        aT1.start();
         aT2.start();
+        try {
+            sleep(100);
+        } catch (Exception e) {
+        }
+        aT1.start();
+        try {
+            sleep(100);
+        } catch (Exception e) {
+        }
         System.err.println(x);
     }
 }
@@ -80,6 +88,7 @@ class Thread_2 extends Thread {
     public static void main(String args[]) {
         Thread_2 aT1 = new Thread_2(1);
         Thread_2 aT2 = new Thread_2(2);
+
         aT1.start();
         aT2.run();    // would aT2.start(); make a difference?
         // not so fast with your answer!
@@ -115,8 +124,6 @@ class Thread_3 implements Runnable {
 }
 
 class Thread_4_InterruptExample extends Thread {
-
-
     public Thread_4_InterruptExample(String name) {
         setName(name);
     }
@@ -125,13 +132,12 @@ class Thread_4_InterruptExample extends Thread {
         try {
             sleep(sleepTime);
         } catch (InterruptedException e) {
-            System.err.println(Thread.currentThread().getName() + " was interrupted in sleepForAbit");
+            System.err.println(Thread.currentThread().getName() + "" +
+                    " was interrupted in sleepForAbit");
         }
-
     }
 
     public void run() {
-
         System.err.println(getName() + " has started!");
         double x = 1;
         while (x > 0) {        // forever loop
@@ -139,7 +145,8 @@ class Thread_4_InterruptExample extends Thread {
             System.err.println(x);
             sleepForAbit(200);
             if (isInterrupted()) {
-                System.err.println(Thread.currentThread().getName() + "is interrupted in run");
+                System.err.println(Thread.currentThread().getName() + "" +
+                        "is interrupted in run");
                 System.err.println("return");
                 return;
             }
@@ -148,7 +155,8 @@ class Thread_4_InterruptExample extends Thread {
     }
 
     public static void main(String args[]) {
-        Thread_4_InterruptExample aThread = new Thread_4_InterruptExample("aThread");
+        Thread_4_InterruptExample aThread =
+                new Thread_4_InterruptExample("aThread");
         aThread.start();
         sleepForAbit(1000);    // should allow the thread to enter the while loop
         aThread.interrupt();

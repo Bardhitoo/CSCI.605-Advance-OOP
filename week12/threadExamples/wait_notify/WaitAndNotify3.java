@@ -3,35 +3,40 @@ import java.util.Vector;
 class WaitAndNotify extends Thread {
 
     private String info;
-    static Vector aVector = new Vector();
+    static String aString = new String("0");
 
-    public WaitAndNotify(String info, Vector aVector) throws InterruptedException {
+    public WaitAndNotify(String info, String aString) throws InterruptedException {
         this.info = info;
-        this.aVector = aVector;
-        if (info == "first") {
-            new WaitAndNotify("second", aVector).start();
-        }
-        if (info == "second")
-            sleep(500);
-
+        this.aString = new String(info);
     }
 
     public void run() {
-        synchronized (aVector) {
+        synchronized (aString) {
+            System.out.println("Key is: " + aString);
+            if (info.equals("first")) {
+                try {
+                    new WaitAndNotify("second", "a").start();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             if (info.equals("second")) {
-                System.out.println(info + " is waking up ...");
-                aVector.notifyAll();
+                try {
+                    sleep(3000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(info + " is waking up ..." + aString);
+                aString.notifyAll();
                 System.out.println(info + " done.");
             } else {
-                System.out.println(info + " is waiting");
+                System.out.println(info + " is waiting..." + aString);
                 try {
-                    aVector.wait();
-                } catch (IllegalMonitorStateException e) {
-                    System.out.println(info +
-                            ": IllegalMonitorStateException");
+                    sleep(3000);
+                    aString.wait(3000);
                 } catch (InterruptedException e) {
                     System.out.println(info +
-                            ": InterruptedException");
+                            ": IllegalMonitorStateException");
                 }
                 System.out.println(info + " is awake!");
             }
@@ -40,7 +45,7 @@ class WaitAndNotify extends Thread {
 
     public static void main(String[] args) {
         try {
-            new WaitAndNotify("first", aVector).start();
+            new WaitAndNotify("first", aString).start();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
